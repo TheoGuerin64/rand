@@ -18,7 +18,7 @@ def init_argparse() -> argparse.ArgumentParser:
     )
     parser.add_argument("-r", "--range", type=int, action="store",
         nargs=2, metavar=('MIN', 'MAX'), default=(-2147483648, 2147483647),
-        help="range between numbers are generated."
+        help="range between numbers are generated (default is -2147483648 2147483647)."
     )
     parser.add_argument("-u", "--unique", action="store_true",
         help="generated numbers have no duplicates."
@@ -27,7 +27,7 @@ def init_argparse() -> argparse.ArgumentParser:
         help="sort numbers."
     )
     parser.add_argument("-sep", "--separator", type=str, action="store", default=" ",
-        help="change separator between numbers."
+        help="change separator between numbers (default is space)."
     )
     parser.add_argument("size", type=size_type, action="store",
         help="number of generated number (must be greater than 0)."
