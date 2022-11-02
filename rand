@@ -1,0 +1,53 @@
+#!/usr/bin/python3
+import random
+import argparse
+
+def size_type(x: str) -> int:
+    try:
+        x = int(x)
+    except ValueError as e:
+        raise argparse.ArgumentTypeError(f"invalid int value: '{x}'") from e
+    if x < 1:
+        raise argparse.ArgumentTypeError("SIZE must be greater than 0")
+    return x
+
+def init_argparse() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        usage="%(prog)s [OPTION]... [SIZE]",
+        description="Print random numbers."
+    )
+    parser.add_argument("-r", "--range", type=int, action="store",
+        nargs=2, metavar=('MIN', 'MAX'), default=(-2147483648, 2147483647),
+        help="number of number generated (must be greater than 0)."
+    )
+    parser.add_argument("-u", "--unique", action="store_true",
+        help="generated numbers have no duplicates."
+    )
+    parser.add_argument("-s", "--sorted", action="store_true",
+        help="generated numbers are sorted ascending."
+    )
+    parser.add_argument("-sep", "--separator", type=str, action="store", default=" ",
+        help="change separator between numbers."
+    )
+    parser.add_argument("size", type=size_type, action="store",
+        help="number of number generated (must be greater than 0)."
+    )
+    return parser
+
+def main() -> None:
+    parser = init_argparse()
+    args = parser.parse_args()
+    if args.range[0] > args.range[1]:
+        parser.error("range MIN must be less or equal to MAX")
+    if args.unique:
+        if args.range[1] - args.range[0] + 1 < args.size:
+            parser.error("range size must be greater or equal to SIZE")
+        numbers = random.sample(range(args.range[0], args.range[1] + 1), args.size)
+    else:
+        numbers = [random.randint(args.range[0], args.range[1]) for _ in range(args.size)]
+    if args.sorted:
+        numbers = sorted(numbers)
+    print(args.separator.join(map(str, numbers)))
+
+if __name__ == "__main__":
+    main()
